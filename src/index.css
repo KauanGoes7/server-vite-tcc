@@ -1,0 +1,15 @@
+/* src/index.css */
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Evita scroll desnecessário se o conteúdo for maior que a tela */
+    font-family: Arial, sans-serif; /* Uma fonte padrão simples */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Opcional: Se quiser um reset mais completo para outros elementos */
+* {
+    box-sizing: border-box;
+}
