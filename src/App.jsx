@@ -5,13 +5,13 @@ import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 // Importe seus componentes de página.
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/Register';
-import UsersPage from './pages/Users';
 import ServicesPage from './pages/Services';
 import BarbersPage from './pages/Barbers';
 import AppointmentsPage from './pages/Appointments';
 
-// Importe seu componente Navbar.
-import Navbar from './components/Navbar';
+// Importações para as novas páginas
+import HomePage from './pages/Home';
+import ApresentacaoPage from './pages/Apresentacao';
 
 // Crie um contexto de autenticação para gerenciar o estado do usuário logado
 export const AuthContext = createContext(null);
@@ -48,40 +48,36 @@ function App() {
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
-            {user && <Navbar />} {/* Renderiza a Navbar apenas se o usuário estiver logado */}
-
-            {/* AQUI ESTÁ A MUDANÇA: Adicionei o estilo diretamente na div .main-content */}
-            {/* Este estilo garante que a área de conteúdo principal ocupe o restante da tela */}
             <div style={{
-                flexGrow: 1, // Permite que esta div ocupe o espaço restante verticalmente (se o body for flex)
+                flexGrow: 1,
                 display: 'flex',
-                flexDirection: 'column', // Para que o conteúdo interno se organize em coluna
-                justifyContent: 'center', // Centraliza o conteúdo verticalmente
-                alignItems: 'center',    // Centraliza o conteúdo horizontalmente
-                minHeight: '100vh',      // Garante que ocupe pelo menos 100% da altura da viewport
-                backgroundColor: '#1a1a2e', // A cor de fundo principal
-                width: '100%',           // Garante 100% da largura
-                paddingTop: user ? '60px' : '0', // Adiciona padding no topo se a Navbar estiver visível
-                boxSizing: 'border-box', // Inclui padding na largura/altura total
+                flexDirection: 'column',
+                // Remova 'justifyContent: center' e 'alignItems: center' do App.jsx
+                // quando se trata de páginas que precisam rolar, pois eles centralizam
+                // o conteúdo verticalmente e horizontalmente, impedindo a rolagem natural.
+                // As páginas internas controlarão seu próprio alinhamento.
+                minHeight: '100vh',
+                backgroundColor: '#1a1a2e',
+                width: '100%',
+                boxSizing: 'border-box',
+                // Importante para a rolagem:
+                // Se o conteúdo de uma página for muito grande, o container principal do App.jsx
+                // precisa permitir que ele se estenda. Ao remover `justifyContent: 'center'`,
+                // a div não tentará forçar todo o conteúdo a caber na tela.
+                // A rolagem será gerenciada pelo `overflowY: 'auto'` na página específica.
             }}>
                 <Routes>
-                    {/* Rota Raiz ("/") */}
                     <Route
                         path="/"
-                        element={user ? <Navigate to="/users" replace /> : <Navigate to="/login" replace />}
+                        element={<Navigate to="/login" replace />}
                     />
-
-                    {/* Rotas Públicas */}
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
-
-                    {/* Rotas Protegidas */}
-                    <Route path="/users" element={<ProtectedRoute><UsersPage /></ProtectedRoute>} />
+                    <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+                    <Route path="/apresentacao" element={<ApresentacaoPage />} /> {/* Esta rota é que precisamos que role */}
                     <Route path="/services" element={<ProtectedRoute><ServicesPage /></ProtectedRoute>} />
                     <Route path="/barbers" element={<ProtectedRoute><BarbersPage /></ProtectedRoute>} />
                     <Route path="/appointments" element={<ProtectedRoute><AppointmentsPage /></ProtectedRoute>} />
-
-                    {/* Rota 404 */}
                     <Route path="*" element={<h1 style={{color: 'white', textAlign: 'center', marginTop: '50px'}}>404 - Página Não Encontrada</h1>} />
                 </Routes>
             </div>

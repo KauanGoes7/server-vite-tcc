@@ -28,7 +28,7 @@ function Login() {
             const userData = response.data;
 
             authLogin(userData);
-            navigate('/users');
+            navigate('/home'); // <--- ALTERADO AQUI: Redireciona para /home após o login
         } catch (err) {
             console.error('Erro no login:', err);
             if (err.response) {
@@ -84,19 +84,19 @@ const styles = {
         minHeight: '100vh',
         backgroundColor: '#1a1a2e',
         color: 'white',
-        justifyContent: 'center', // Centraliza os itens filhos (leftPanel, rightPanel) horizontalmente
-        alignItems: 'center',    // Centraliza os itens filhos verticalmente
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: '20px',
         boxSizing: 'border-box',
-        gap: '50px', // Espaçamento entre a logo e o card de login
+        gap: '50px',
     },
     leftPanel: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         padding: '20px',
-        maxWidth: '400px', // Ajustei o tamanho máximo da área da logo
-        flexShrink: 0, // Garante que não encolha em telas pequenas
+        maxWidth: '400px',
+        flexShrink: 0,
     },
     logo: {
         maxWidth: '100%',
@@ -107,20 +107,19 @@ const styles = {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: '30px', // Aumentei um pouco o padding interno do card
+        padding: '30px',
         backgroundColor: '#2e2e4e',
         borderRadius: '15px',
         boxShadow: '0 8px 16px rgba(0, 0, 0, 0.4)',
-        maxWidth: '320px', // **Deixei o card ainda menor**
-        minWidth: '280px', // Garante que não fique muito pequeno
+        maxWidth: '320px',
+        minWidth: '280px',
         height: 'fit-content',
-        // Removidas as margens 'auto' e 'alignSelf' do rightPanel, pois o flexbox do container agora cuida da centralização e espaçamento.
     },
     form: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '18px', // Ajustei o espaçamento entre os campos
-        width: '100%', // Ocupa a largura total do card
+        gap: '18px',
+        width: '100%',
     },
     input: {
         backgroundColor: '#4a4a6e',
@@ -129,7 +128,7 @@ const styles = {
         borderRadius: '25px',
         border: 'none',
         fontSize: '1em',
-        outline: 'none', // Remove a borda de foco padrão do navegador
+        outline: 'none',
     },
     button: {
         backgroundColor: '#00bcd4',
@@ -142,7 +141,7 @@ const styles = {
         fontWeight: 'bold',
         transition: 'background-color 0.3s ease, transform 0.2s ease',
         marginTop: '10px',
-        outline: 'none', // Remove a borda de foco padrão do navegador
+        outline: 'none',
     },
     errorText: {
         color: '#ff6b6b',

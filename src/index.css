@@ -1,10 +1,13 @@
 /* src/index.css */
 html, body, #root {
-    height: 100%;
+    /* Remova 'height: 100%;' se quiser que o body se expanda com o conteúdo. */
+    /* Mantenha 'min-height: 100vh;' no container do App.jsx para garantir que ele ocupe pelo menos a tela inteira. */
+    height: 100%; /* Pode manter isso se as páginas internas tiverem overflow próprio */
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Evita scroll desnecessário se o conteúdo for maior que a tela */
-    font-family: Arial, sans-serif; /* Uma fonte padrão simples */
+    /* ALTERAÇÃO CRÍTICA AQUI: Remova ou altere para 'auto' ou 'unset' */
+    overflow: auto; /* Permite rolagem se o conteúdo for maior que a tela */
+    font-family: Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
