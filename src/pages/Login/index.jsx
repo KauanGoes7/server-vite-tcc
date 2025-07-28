@@ -1,10 +1,9 @@
 // src/pages/Login/index.jsx
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../../api/api';
+import api from '../../api/api'; 
 import { AuthContext } from '../../App';
 
-// Importe a imagem da logo Agenda Corte. Caminho relativo correto para src/assets/login/
 import logoAgendaCorte from '../../assets/login/image 4-Photoroom 2.png';
 
 function Login() {
@@ -24,19 +23,61 @@ function Login() {
         }
 
         try {
+            // TENTATIVA 1: Tentar login com o backend
             const response = await api.post('/login', { email, password });
-            const userData = response.data;
+            const userData = response.data; 
 
-            authLogin(userData);
-            navigate('/home'); // <--- ALTERADO AQUI: Redireciona para /home após o login
+            console.log('Resposta do backend no login:', userData); // VERIFIQUE ESTE LOG NO CONSOLE!
+
+            // --- ALTERAÇÃO AQUI: Ajuste para o formato de resposta do backend ---
+            // Se o backend retorna o objeto do usuário DIRETAMENTE (sem a chave 'user' aninhada),
+            // use 'authLogin(userData);'
+            // Se o backend retorna { message: "...", user: { ... } }, use 'authLogin(userData.user);'
+            // Com base no seu relato, é provável que seja 'authLogin(userData);'
+            
+            // Vamos testar com 'authLogin(userData);' primeiro, que é o mais provável.
+            // Se o backend retornar um objeto de usuário válido diretamente, isso funcionará.
+            if (userData && (userData.id || userData.email)) { // Verifica se userData é um objeto de usuário válido
+                authLogin(userData); // <--- MUDANÇA MAIS PROVÁVEL PARA O SEU CASO
+                navigate('/home'); 
+            } else {
+                console.error("Formato de dados do usuário inesperado na resposta do login do backend:", userData);
+                setError("Erro inesperado na resposta do servidor. Formato de dados inválido.");
+            }
+
         } catch (err) {
-            console.error('Erro no login:', err);
+            console.error('Erro no login do backend:', err);
+            
+            let backendLoginFailed = false;
             if (err.response) {
-                setError(err.response.data.error || 'Credenciais inválidas. Tente novamente.');
+                if (err.response.status === 401 || err.response.status === 404) {
+                    backendLoginFailed = true;
+                } else {
+                    setError(err.response.data.error || 'Erro ao conectar com o servidor. Tente novamente mais tarde.');
+                }
             } else if (err.request) {
+                backendLoginFailed = true; 
                 setError('Não foi possível conectar ao servidor. Verifique sua conexão ou se o backend está online.');
             } else {
                 setError('Ocorreu um erro inesperado. Tente novamente.');
+            }
+
+            // TENTATIVA 2: Se o login do backend falhou, tentar login com a conta demo do localStorage
+            if (backendLoginFailed || err.request) { 
+                try {
+                    const storedDemoUser = JSON.parse(localStorage.getItem('demoRegisteredUser') || 'null');
+
+                    if (storedDemoUser && storedDemoUser.email === email && storedDemoUser.password === password) {
+                        console.log('Login bem-sucedido com conta demo local:', storedDemoUser);
+                        authLogin(storedDemoUser); 
+                        navigate('/home');
+                    } else {
+                        setError('Email ou senha incorretos. Por favor, verifique suas credenciais.');
+                    }
+                } catch (localErr) {
+                    console.error('Erro ao ler do localStorage para login demo:', localErr);
+                    setError('Ocorreu um erro ao tentar o login. Tente novamente.');
+                }
             }
         }
     };
@@ -77,7 +118,6 @@ function Login() {
     );
 }
 
-// Estilos para o componente - Incorporados para simplicidade
 const styles = {
     container: {
         display: 'flex',
