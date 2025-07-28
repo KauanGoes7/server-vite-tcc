@@ -1,15 +1,26 @@
 // src/pages/Home/index.jsx
+
 import React from 'react';
 import { useContext } from 'react';
 import { AuthContext } from '../../App';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // <--- Adicionado useNavigate aqui
+
+
 
 // Importar as imagens
 import logoAgendaCorte from '../../assets/Home/image 4-Photoroom 2.png'; // Logo principal
 import iconHome from '../../assets/Home/410441 1.png'; // Ícone pequeno
 
+
 function Home() {
     const { user, logout } = useContext(AuthContext);
+    const navigate = useNavigate(); // <--- Inicializado o useNavigate
+
+
+    const handleAgendarClick = () => { // <--- Nova função para lidar com o clique
+        navigate('/services'); // <--- Redireciona para /services
+    };
+
 
     return (
         <div style={styles.container}>
@@ -17,7 +28,7 @@ function Home() {
             <div style={styles.header}>
                 {/* Ícone no canto superior esquerdo */}
                 <img src={iconHome} alt="Ícone" style={styles.headerIconLeft} />
-                
+
                 {/* Link de apresentação no canto superior direito */}
                 <Link to="/apresentacao" style={styles.presentationLinkRight}>APRESENTAÇÃO</Link>
             </div>
@@ -27,7 +38,12 @@ function Home() {
                 <img src={logoAgendaCorte} alt="Agenda Corte Barbearia Logo" style={styles.logo} />
                 <p style={styles.text}>Estilo não se improvisa.</p>
                 <p style={styles.text}>Agende agora.</p>
-                <button style={styles.button}>Agendar</button>
+                <button
+                    style={styles.button}
+                    onClick={handleAgendarClick} // <--- Adicionado o onClick
+                >
+                    Agendar
+                </button>
             </div>
 
             {/* Rodapé (vazio por enquanto) */}
