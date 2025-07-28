@@ -43,19 +43,19 @@ function Apresentacao() {
                     <h2 style={styles.sectionTitle}>Nossos Valores</h2>
                     <ul style={styles.list}>
                         <li style={styles.listItem}>
-                            <strong>**Excelência:**</strong> Buscamos a perfeição em cada serviço, da tesoura ao atendimento.
+                            <strong>Excelência:</strong> Buscamos a perfeição em cada serviço, da tesoura ao atendimento.
                         </li>
                         <li style={styles.listItem}>
-                            <strong>**Tradição:**</strong> Honramos as raízes da barbearia, utilizando técnicas clássicas e produtos de qualidade.
+                            <strong>Tradição:</strong> Honramos as raízes da barbearia, utilizando técnicas clássicas e produtos de qualidade.
                         </li>
                         <li style={styles.listItem}>
-                            <strong>**Inovação:**</strong> Estamos sempre atualizados com as últimas tendências e tecnologias do mercado.
+                            <strong>Inovação:</strong> Estamos sempre atualizados com as últimas tendências e tecnologias do mercado.
                         </li>
                         <li style={styles.listItem}>
-                            <strong>**Respeito:**</strong> Valorizamos cada cliente, oferecendo um ambiente acolhedor e profissional.
+                            <strong>Respeito:</strong> Valorizamos cada cliente, oferecendo um ambiente acolhedor e profissional.
                         </li>
                         <li style={styles.listItem}>
-                            <strong>**Paixão:**</strong> Amamos o que fazemos e isso se reflete em nosso trabalho.
+                            <strong>Paixão:</strong> Amamos o que fazemos e isso se reflete em nosso trabalho.
                         </li>
                     </ul>
                 </div>
