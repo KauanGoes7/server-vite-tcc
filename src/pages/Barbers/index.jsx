@@ -49,6 +49,11 @@ function Barbeiros() {
         navigate('/login');
     };
 
+    const handleMyAppointments = () => {
+        navigate('/meus-agendamentos');
+        setShowProfilePopup(false); // Fecha o popup após navegar
+    };
+
     const handleBarberSelect = (barberId) => {
         setSelectedBarberId(barberId);
         // Salva o ID do barbeiro selecionado no localStorage imediatamente
@@ -89,6 +94,10 @@ function Barbeiros() {
                         <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
                         <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
                         <div style={styles.popupDivider}></div>
+                        {/* ADICIONADO: Botão Meus Agendamentos */}
+                        <button onClick={handleMyAppointments} style={styles.myAppointmentsButton}>
+                            Meus Agendamentos
+                        </button>
                         <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
                     </div>
                 )}
@@ -228,16 +237,30 @@ const styles = {
         backgroundColor: '#4a4a6e',
         marginBottom: '15px',
     },
+    myAppointmentsButton: { // Estilo adicionado para o botão "Meus Agendamentos"
+        backgroundColor: 'transparent',
+        color: '#00bcd4',
+        border: '1px solid #00bcd4',
+        padding: '10px 20px',
+        borderRadius: '20px',
+        cursor: 'pointer',
+        fontSize: '1em',
+        fontWeight: 'bold',
+        transition: 'background-color 0.3s ease, color 0.3s ease',
+        width: '100%',
+        marginBottom: '10px',
+    },
     logoutButton: {
         backgroundColor: 'transparent',
-        color: '#00bcd4',
-        border: '1px solid #00bcd4',
+        color: 'red',
+        border: '1px solid red',
         padding: '10px 20px',
         borderRadius: '20px',
         cursor: 'pointer',
         fontSize: '1em',
         fontWeight: 'bold',
         transition: 'background-color 0.3s ease, color 0.3s ease',
+        width: '100%',
     },
     mainContent: {
         display: 'flex',

@@ -7,13 +7,13 @@ import LoginPage from './pages/Login';
 import RegisterPage from './pages/Register';
 import ServicesPage from './pages/Services';
 import BarbersPage from './pages/Barbers';
-// REMOVIDO: import AppointmentsPage from './pages/Appointments'; // Esta linha foi removida
 
 // Importações para as novas páginas
 import HomePage from './pages/Home';
 import ApresentacaoPage from './pages/Apresentacao';
-import AgendaData from './pages/AgendaData'; // MANTIDO
-import ConfirmacaoAgendamento from './pages/ConfirmacaoAgendamento'; // MANTIDO (vamos criar este arquivo a seguir!)
+import AgendaData from './pages/AgendaData';
+import ConfirmacaoAgendamento from './pages/ConfirmacaoAgendamento';
+import MeusAgendamentos from './pages/MeusAgendamentos';
 
 // Crie um contexto de autenticação para gerenciar o estado do usuário logado
 export const AuthContext = createContext(null);
@@ -25,12 +25,10 @@ const ProtectedRoute = ({ children }) => {
 
     useEffect(() => {
         if (!user) {
-            // Se não houver usuário logado, redireciona para a página de login
             navigate('/login', { replace: true });
         }
     }, [user, navigate]);
 
-    // Renderiza os filhos apenas se houver usuário
     return user ? children : null;
 };
 
@@ -48,6 +46,13 @@ function App() {
     const logout = () => {
         localStorage.removeItem('user');
         setUser(null);
+        // Limpa todos os dados de agendamento e seleção no logout
+        localStorage.removeItem('userAppointments');
+        localStorage.removeItem('selectedServiceIds');
+        localStorage.removeItem('selectedBarberId');
+        localStorage.removeItem('selectedDate');
+        localStorage.removeItem('selectedTime');
+        localStorage.removeItem('lastConfirmedAppointment');
     };
 
     return (
@@ -73,12 +78,9 @@ function App() {
                     <Route path="/services" element={<ProtectedRoute><ServicesPage /></ProtectedRoute>} />
                     <Route path="/Barbers" element={<ProtectedRoute><BarbersPage /></ProtectedRoute>} />
 
-                    {/* Rotas para as novas telas de agendamento */}
                     <Route path="/AgendaData" element={<ProtectedRoute><AgendaData /></ProtectedRoute>} />
                     <Route path="/ConfirmacaoAgendamento" element={<ProtectedRoute><ConfirmacaoAgendamento /></ProtectedRoute>} />
-
-                    {/* REMOVIDO: Rota para AppointmentsPage */}
-                    {/* <Route path="/appointments" element={<ProtectedRoute><AppointmentsPage /></ProtectedRoute>} /> */}
+                    <Route path="/meus-agendamentos" element={<ProtectedRoute><MeusAgendamentos /></ProtectedRoute>} />
 
                     <Route path="*" element={<h1 style={{color: 'white', textAlign: 'center', marginTop: '50px'}}>404 - Página Não Encontrada</h1>} />
                 </Routes>

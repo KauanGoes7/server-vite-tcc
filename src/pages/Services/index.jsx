@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../App'; // Para pegar o user logado e o logout
 
-// Importar os ícones específicos para a tela de Serviços
+// Ícones de imagem
 import backArrowIcon from '../../assets/servicos/seta-para-a-esquerda 3.png';
 import profileIcon from '../../assets/servicos/usuario-de-perfil 2.png';
 import scissorsIcon from '../../assets/servicos/scissors 1.png';
@@ -38,6 +38,12 @@ function Services() {
     const handleLogout = () => {
         logout(); // Limpa o estado do usuário e o localStorage
         navigate('/login'); // Redireciona para a tela de login
+    };
+
+    // NOVO: Função para navegar para Meus Agendamentos
+    const handleMyAppointments = () => {
+        navigate('/meus-agendamentos');
+        setShowProfilePopup(false); // Fecha o popup após navegar
     };
 
     // Função para lidar com a seleção/desseleção de um serviço
@@ -127,6 +133,10 @@ function Services() {
                         <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
                         <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
                         <div style={styles.popupDivider}></div>
+                        {/* NOVO: Botão Meus Agendamentos adicionado aqui */}
+                        <button onClick={handleMyAppointments} style={styles.myAppointmentsButton}>
+                            Meus Agendamentos
+                        </button>
                         <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
                     </div>
                 )}
@@ -195,7 +205,7 @@ function Services() {
     );
 }
 
-// Estilos (Mantidos exatamente como antes, com a alteração no profileIcon)
+// Estilos (Mantidos exatamente como antes, com a adição do estilo para myAppointmentsButton)
 const styles = {
     servicosContainer: {
         display: 'flex',
@@ -241,8 +251,8 @@ const styles = {
         height: '40px',
         cursor: 'pointer',
         borderRadius: '50%',
-        backgroundColor: 'transparent', // <---- ALTERAÇÃO AQUI
-        padding: '0', // <---- ALTERAÇÃO AQUI
+        backgroundColor: 'transparent',
+        padding: '0',
         boxSizing: 'border-box',
     },
     profilePopup: {
@@ -284,7 +294,8 @@ const styles = {
         backgroundColor: '#4a4a6e',
         marginBottom: '15px',
     },
-    logoutButton: {
+    // Estilo para o botão "Meus Agendamentos"
+    myAppointmentsButton: {
         backgroundColor: 'transparent',
         color: '#00bcd4',
         border: '1px solid #00bcd4',
@@ -294,6 +305,20 @@ const styles = {
         fontSize: '1em',
         fontWeight: 'bold',
         transition: 'background-color 0.3s ease, color 0.3s ease',
+        width: '100%',
+        marginBottom: '10px', // Espaçamento entre os botões
+    },
+    logoutButton: {
+        backgroundColor: 'transparent',
+        color: 'red', // Borda vermelha conforme solicitado anteriormente
+        border: '1px solid red',
+        padding: '10px 20px',
+        borderRadius: '20px',
+        cursor: 'pointer',
+        fontSize: '1em',
+        fontWeight: 'bold',
+        transition: 'background-color 0.3s ease, color 0.3s ease',
+        width: '100%',
     },
     servicosMainContent: {
         display: 'flex',

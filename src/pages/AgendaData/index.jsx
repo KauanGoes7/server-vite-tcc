@@ -1,4 +1,3 @@
-// src/pages/AgendaData/index.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../App';
@@ -21,15 +20,15 @@ function AgendaData() {
 
     // Dados hardcoded para simular a busca de detalhes (em um app real, viriam de uma API ou banco de dados)
     const hardcodedServices = [
-        { Id: 1, NomeServico: "MID FADE + RISQUINHO NA NAVALHA" },
-        { Id: 2, NomeServico: "Low Fade + Topo Texturizado" },
-        { Id: 3, NomeServico: "Buzz Cut + Linha de Contorno" },
-        { Id: 4, NomeServico: "Barba Degradê + Desenhos" },
-        { Id: 5, NomeServico: "Stuble Texturizado" },
-        { Id: 6, NomeServico: "Van Dyke" },
-        { Id: 7, NomeServico: "O Clássico Renovado" },
-        { Id: 8, NomeServico: "O Rebelde Controlado" },
-        { Id: 9, NomeServico: "O Minimalista Sofisticado" },
+        { Id: 1, Tema: "Corte", NomeServico: "MID FADE + RISQUINHO NA NAVALHA", Descricao: "Degradê médio + detalhe fino na navalha (lados bem alinhados, transição suave)." },
+        { Id: 2, Tema: "Corte", NomeServico: "Low Fade + Topo Texturizado", Descricao: "Degradê baixo + topo com tesoura para volume natural (versátil para qualquer ocasião)." },
+        { Id: 3, Tema: "Corte", NomeServico: "Buzz Cut + Linha de Contorno", Descricao: "Corte máquina rente + linha de contorno nítida (estilo limpo e moderno)." },
+        { Id: 4, Tema: "Barba", NomeServico: "Barba Degradê + Desenhos", Descricao: "Degradê perfeito dos lados + detalhes artísticos (linhas geométricas ou símbolos personalizados)." },
+        { Id: 5, Tema: "Barba", NomeServico: "Stuble Texturizado", Descricao: "Barba rala aparada com precisão (3mm-5mm) contorno definido (estilo 'homem moderno')" },
+        { Id: 6, Tema: "Barba", NomeServico: "Van Dyke", Descricao: "Bigode separado + cavanhaque alongado (toque vintage e sofisticado)." },
+        { Id: 7, Tema: "Corte e Barba", NomeServico: "O Clássico Renovado", Descricao: "Degradê perfeito dos lados + detalhes artísticos (linhas geométricas ou símbolos personalizados)." },
+        { Id: 8, Tema: "Corte e Barba", NomeServico: "O Rebelde Controlado", Descricao: "Barba: Dutch beard (laterais quadradas)" },
+        { Id: 9, Tema: "Corte e Barba", NomeServico: "O Minimalista Sofisticado", Descricao: "Barba: Circle beard (3cm de comprimento)" },
     ];
 
     const hardcodedBarbers = [
@@ -91,12 +90,14 @@ function AgendaData() {
         navigate('/login');
     };
 
+    const handleMyAppointments = () => {
+        navigate('/meus-agendamentos');
+        setShowProfilePopup(false); // Fecha o popup após navegar
+    };
+
     const handleDateSelect = (date) => {
         setSelectedDate(date);
         setSelectedTime(''); // Reseta a seleção de hora ao mudar a data
-        // Em um app real, aqui você faria uma chamada API para buscar horários
-        // específicos para esta data, barbeiro e serviços.
-        // Por enquanto, usamos os horários fixos.
     };
 
     const handleTimeSelect = (time) => {
@@ -112,9 +113,38 @@ function AgendaData() {
         // Formata a data para YYYY-MM-DD para salvar no localStorage
         const formattedDate = selectedDate.toISOString().split('T')[0];
 
-        // Salva a data e hora selecionadas no localStorage
+        // Mapeia os IDs dos serviços para os objetos completos de serviço
+        const selectedServices = selectedServiceIds.map(id => hardcodedServices.find(s => s.Id === id)).filter(Boolean);
+        const selectedBarber = hardcodedBarbers.find(b => b.Id === selectedBarberId);
+
+        // --- NOVA LÓGICA: Salvar o agendamento na lista permanente 'userAppointments' ---
+        let userAppointments = JSON.parse(localStorage.getItem('userAppointments') || '[]');
+
+        // Gera um ID único para o novo agendamento
+        const newAppointmentId = userAppointments.length > 0
+            ? Math.max(...userAppointments.map(a => a.id)) + 1
+            : 1;
+
+        const newAppointment = {
+            id: newAppointmentId,
+            services: selectedServices, // Usando 'services' para consistência
+            barbeiro: selectedBarber, // Mantendo 'barbeiro' como no seu mock
+            data: formattedDate,
+            hora: selectedTime,
+            status: 'ativo', // Define o status inicial como 'ativo'
+            timestamp: new Date().toISOString() // Adiciona um timestamp para ajudar a evitar duplicação em refreshes rápidos
+        };
+
+        userAppointments.push(newAppointment);
+        localStorage.setItem('userAppointments', JSON.stringify(userAppointments));
+
+        // Salva os dados temporários para a tela de confirmação (que os lerá e depois limpará)
         localStorage.setItem('selectedDate', formattedDate);
         localStorage.setItem('selectedTime', selectedTime);
+        // Os IDs de serviço e barbeiro já estão no localStorage, mas para clareza, podemos garantir que estejam lá
+        localStorage.setItem('selectedServiceIds', JSON.stringify(selectedServiceIds));
+        localStorage.setItem('selectedBarberId', selectedBarberId);
+
 
         // Navega para a tela de confirmação
         navigate('/ConfirmacaoAgendamento');
@@ -130,7 +160,7 @@ function AgendaData() {
         <div style={styles.container}>
             {/* Botão de Voltar */}
             <div style={styles.backButtonContainer}>
-                <Link to="/Barbers" style={styles.backButton}> {/* Volta para a tela de Barbeiros */}
+                <Link to="/Barbeiros" style={styles.backButton}> {/* Volta para a tela de Barbeiros */}
                     <img src={backArrowIcon} alt="Voltar" style={styles.backIcon} />
                 </Link>
             </div>
@@ -149,6 +179,9 @@ function AgendaData() {
                         <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
                         <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
                         <div style={styles.popupDivider}></div>
+                        <button onClick={handleMyAppointments} style={styles.myAppointmentsButton}>
+                            Meus Agendamentos
+                        </button>
                         <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
                     </div>
                 )}
@@ -271,8 +304,8 @@ const styles = {
         height: '40px',
         cursor: 'pointer',
         borderRadius: '50%',
-        backgroundColor: 'transparent', // <---- ALTERAÇÃO AQUI
-        padding: '0', // <---- ALTERAÇÃO AQUI
+        backgroundColor: 'transparent',
+        padding: '0',
         boxSizing: 'border-box',
     },
     profilePopup: {
@@ -293,7 +326,7 @@ const styles = {
         width: '60px',
         height: '60px',
         borderRadius: '50%',
-        backgroundColor: 'transparent', 
+        backgroundColor: 'transparent',
         padding: '0',
         marginBottom: '15px',
     },
@@ -314,7 +347,7 @@ const styles = {
         backgroundColor: '#4a4a6e',
         marginBottom: '15px',
     },
-    logoutButton: {
+    myAppointmentsButton: { // Estilo adicionado para o botão "Meus Agendamentos"
         backgroundColor: 'transparent',
         color: '#00bcd4',
         border: '1px solid #00bcd4',
@@ -324,6 +357,20 @@ const styles = {
         fontSize: '1em',
         fontWeight: 'bold',
         transition: 'background-color 0.3s ease, color 0.3s ease',
+        width: '100%',
+        marginBottom: '10px', // Adicionado para espaçar do botão de logout
+    },
+    logoutButton: {
+        backgroundColor: 'transparent',
+        color: 'red',
+        border: '1px solid red',
+        padding: '10px 20px',
+        borderRadius: '20px',
+        cursor: 'pointer',
+        fontSize: '1em',
+        fontWeight: 'bold',
+        transition: 'background-color 0.3s ease, color 0.3s ease',
+        width: '100%',
     },
     mainContent: {
         display: 'flex',

@@ -67,6 +67,12 @@ function ConfirmacaoAgendamento() {
         navigate('/login');
     };
 
+    // NOVO: Função para navegar para Meus Agendamentos
+    const handleMyAppointments = () => {
+        navigate('/meus-agendamentos');
+        setShowProfilePopup(false); // Fecha o popup após navegar
+    };
+
     const handleNewBooking = () => {
         // Limpa os dados do localStorage APENAS quando um novo agendamento é iniciado
         localStorage.removeItem('selectedServiceIds');
@@ -117,6 +123,13 @@ function ConfirmacaoAgendamento() {
                         <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
                         <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
                         <div style={styles.popupDivider}></div>
+                        {/* NOVO: Botão Meus Agendamentos */}
+                        <button
+                            onClick={handleMyAppointments}
+                            style={styles.myAppointmentsButton} // Estilo para o novo botão
+                        >
+                            Meus Agendamentos
+                        </button>
                         <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
                     </div>
                 )}
@@ -186,7 +199,7 @@ function ConfirmacaoAgendamento() {
     );
 }
 
-// Estilos (Mantidos exatamente como antes, com a alteração no profileIcon)
+// Estilos (Mantidos exatamente como antes, com a adição do estilo para myAppointmentsButton)
 const styles = {
     container: {
         display: 'flex',
@@ -232,8 +245,8 @@ const styles = {
         height: '40px',
         cursor: 'pointer',
         borderRadius: '50%',
-        backgroundColor: 'transparent', // <---- ALTERAÇÃO AQUI
-        padding: '0', // <---- ALTERAÇÃO AQUI
+        backgroundColor: 'transparent',
+        padding: '0',
         boxSizing: 'border-box',
     },
     profilePopup: {
@@ -254,7 +267,7 @@ const styles = {
         width: '60px',
         height: '60px',
         borderRadius: '50%',
-        backgroundColor: 'transparent', 
+        backgroundColor: 'transparent',
         padding: '0',
         marginBottom: '15px',
     },
@@ -275,7 +288,8 @@ const styles = {
         backgroundColor: '#4a4a6e',
         marginBottom: '15px',
     },
-    logoutButton: {
+    // NOVO ESTILO PARA O BOTÃO "Meus Agendamentos"
+    myAppointmentsButton: {
         backgroundColor: 'transparent',
         color: '#00bcd4',
         border: '1px solid #00bcd4',
@@ -285,6 +299,20 @@ const styles = {
         fontSize: '1em',
         fontWeight: 'bold',
         transition: 'background-color 0.3s ease, color 0.3s ease',
+        width: '100%', // Adicionado para ocupar a largura total do popup
+        marginBottom: '10px', // Espaçamento entre os botões
+    },
+    logoutButton: {
+        backgroundColor: 'transparent',
+        color: 'red',
+        border: '1px solid red',
+        padding: '10px 20px',
+        borderRadius: '20px',
+        cursor: 'pointer',
+        fontSize: '1em',
+        fontWeight: 'bold',
+        transition: 'background-color 0.3s ease, color 0.3s ease',
+        width: '100%',
     },
     mainContent: {
         display: 'flex',
@@ -366,7 +394,7 @@ const styles = {
         color: 'white',
         fontWeight: 'normal',
         fontSize: '1.1em',
-        display: 'inline', // Alterado para inline para não quebrar linha entre serviços
+        display: 'inline',
     },
     thankYouMessage: {
         fontSize: '1.1em',
