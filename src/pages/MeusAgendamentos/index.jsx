@@ -114,7 +114,7 @@ function MeusAgendamentos() {
                 </div>
             </div>
 
-            <h1 style={styles.title}>Meus Agendamentos</h1>
+            <h1 style={styles.title}>Agendamentos</h1>
 
             <section style={styles.appointmentsList}>
                 {appointments.length > 0 ? (

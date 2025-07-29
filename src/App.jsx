@@ -14,6 +14,7 @@ import ApresentacaoPage from './pages/Apresentacao';
 import AgendaData from './pages/AgendaData';
 import ConfirmacaoAgendamento from './pages/ConfirmacaoAgendamento';
 import MeusAgendamentos from './pages/MeusAgendamentos';
+import Contato from './pages/contato'; // <--- NOVA IMPORTAÇÃO AQUI
 
 // Crie um contexto de autenticação para gerenciar o estado do usuário logado
 export const AuthContext = createContext(null);
@@ -81,6 +82,7 @@ function App() {
                     <Route path="/AgendaData" element={<ProtectedRoute><AgendaData /></ProtectedRoute>} />
                     <Route path="/ConfirmacaoAgendamento" element={<ProtectedRoute><ConfirmacaoAgendamento /></ProtectedRoute>} />
                     <Route path="/meus-agendamentos" element={<ProtectedRoute><MeusAgendamentos /></ProtectedRoute>} />
+                    <Route path="/contact" element={<ProtectedRoute><Contato /></ProtectedRoute>} /> {/* <--- NOVA ROTA AQUI */}
 
                     <Route path="*" element={<h1 style={{color: 'white', textAlign: 'center', marginTop: '50px'}}>404 - Página Não Encontrada</h1>} />
                 </Routes>

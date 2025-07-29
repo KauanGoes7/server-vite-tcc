@@ -67,9 +67,15 @@ function ConfirmacaoAgendamento() {
         navigate('/login');
     };
 
-    // NOVO: Função para navegar para Meus Agendamentos
+    // Função para navegar para Meus Agendamentos
     const handleMyAppointments = () => {
         navigate('/meus-agendamentos');
+        setShowProfilePopup(false); // Fecha o popup após navegar
+    };
+
+    // NOVO: Função para navegar para a página de Contato
+    const handleContact = () => {
+        navigate('/contact'); // Supondo que você tenha uma rota '/contact'
         setShowProfilePopup(false); // Fecha o popup após navegar
     };
 
@@ -123,12 +129,16 @@ function ConfirmacaoAgendamento() {
                         <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
                         <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
                         <div style={styles.popupDivider}></div>
-                        {/* NOVO: Botão Meus Agendamentos */}
+                        {/* Botão Meus Agendamentos */}
                         <button
                             onClick={handleMyAppointments}
                             style={styles.myAppointmentsButton} // Estilo para o novo botão
                         >
-                            Meus Agendamentos
+                        Agendamentos
+                        </button>
+                        {/* NOVO: Botão de Contato */}
+                        <button onClick={handleContact} style={styles.contactButton}>
+                            Contato
                         </button>
                         <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
                     </div>
@@ -199,7 +209,7 @@ function ConfirmacaoAgendamento() {
     );
 }
 
-// Estilos (Mantidos exatamente como antes, com a adição do estilo para myAppointmentsButton)
+// Estilos (Mantidos exatamente como antes, com a adição do estilo para myAppointmentsButton e contactButton)
 const styles = {
     container: {
         display: 'flex',
@@ -288,7 +298,6 @@ const styles = {
         backgroundColor: '#4a4a6e',
         marginBottom: '15px',
     },
-    // NOVO ESTILO PARA O BOTÃO "Meus Agendamentos"
     myAppointmentsButton: {
         backgroundColor: 'transparent',
         color: '#00bcd4',
@@ -299,8 +308,22 @@ const styles = {
         fontSize: '1em',
         fontWeight: 'bold',
         transition: 'background-color 0.3s ease, color 0.3s ease',
-        width: '100%', // Adicionado para ocupar a largura total do popup
-        marginBottom: '10px', // Espaçamento entre os botões
+        width: '100%',
+        marginBottom: '10px',
+    },
+    // NOVO ESTILO: Botão de Contato
+    contactButton: {
+        backgroundColor: 'transparent',
+        color: '#00bcd4',
+        border: '1px solid #00bcd4',
+        padding: '10px 20px',
+        borderRadius: '20px',
+        cursor: 'pointer',
+        fontSize: '1em',
+        fontWeight: 'bold',
+        transition: 'background-color 0.3s ease, color 0.3s ease',
+        width: '100%',
+        marginBottom: '10px', // Adicionado margem inferior para separar do botão de deslogar
     },
     logoutButton: {
         backgroundColor: 'transparent',

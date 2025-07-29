@@ -144,7 +144,7 @@ const styles = {
         padding: '20px',
     },
     logoImage: {
-        width: '250px',
+        width: '350px',
         height: 'auto',
     },
     mainContent: {

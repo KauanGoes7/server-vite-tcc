@@ -84,6 +84,11 @@ function Login() {
 
     return (
         <div style={styles.container}>
+            {/* Link para a página de Apresentação no canto superior direito */}
+            <Link to="/apresentacao" style={styles.apresentacaoLink}>
+                Apresentação
+            </Link>
+
             <div style={styles.leftPanel}>
                 <img src={logoAgendaCorte} alt="Agenda Corte Barbearia Logo" style={styles.logo} />
             </div>
@@ -129,6 +134,26 @@ const styles = {
         padding: '20px',
         boxSizing: 'border-box',
         gap: '50px',
+        position: 'relative', // Adicionado para posicionamento absoluto do link
+    },
+    // NOVO ESTILO: Link de Apresentação
+    apresentacaoLink: {
+        position: 'absolute',
+        top: '20px',
+        right: '20px',
+        color: '#00bcd4', // Cor do link
+        textDecoration: 'none',
+        fontSize: '1em',
+        fontWeight: 'bold',
+        padding: '8px 15px',
+        borderRadius: '20px',
+        border: '1px solid #00bcd4',
+        transition: 'background-color 0.3s ease, color 0.3s ease',
+        zIndex: 1000,
+        '&:hover': {
+            backgroundColor: '#00bcd4',
+            color: '#1a1a2e',
+        },
     },
     leftPanel: {
         display: 'flex',
