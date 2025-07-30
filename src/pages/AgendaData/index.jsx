@@ -1,5 +1,5 @@
     import React, { useState, useContext, useEffect } from 'react';
-    import { Link, useNavigate } from 'react-router-dom';
+    import { Link, useNavigate } from 'react-router-dom'; // Garante que useNavigate está importado
     import { AuthContext } from '../../App';
 
     // Ícones (Certifique-se de que estes caminhos estão corretos)
@@ -164,38 +164,43 @@
 
         return (
             <div style={styles.container}>
-                {/* Botão de Voltar */}
-                <div style={styles.backButtonContainer}>
-                    <Link to="/Barbeiros" style={styles.backButton}> {/* Volta para a tela de Barbeiros */}
-                        <img src={backArrowIcon} alt="Voltar" style={styles.backIcon} />
-                    </Link>
-                </div>
+                {/* Header com botões de voltar e perfil */}
+                <header style={styles.header}>
+                    {/* Botão de Voltar - Agora usa navigate(-1) */}
+                    <button onClick={() => navigate(-1)} style={styles.headerIconButton}>
+                        <img
+                            src={backArrowIcon}
+                            alt="Voltar"
+                            style={styles.headerIcon}
+                        />
+                    </button>
 
-                {/* Ícone de Perfil e Popup */}
-                <div style={styles.profileContainer}>
-                    <img
-                        src={profileIcon}
-                        alt="Perfil"
-                        style={styles.profileIcon}
-                        onClick={() => setShowProfilePopup(!showProfilePopup)}
-                    />
-                    {showProfilePopup && (
-                        <div style={styles.profilePopup}>
-                            <img src={profileIcon} alt="Perfil" style={styles.popupProfileIcon} />
-                            <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
-                            <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
-                            <div style={styles.popupDivider}></div>
-                            <button onClick={handleMyAppointments} style={styles.myAppointmentsButton}>
-                            Agendamentos
-                            </button>
-                            {/* NOVO: Botão de Contato */}
-                            <button onClick={handleContact} style={styles.contactButton}>
-                                Contato
-                            </button>
-                            <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
-                        </div>
-                    )}
-                </div>
+                    {/* Ícone de Perfil e Popup - Agora dentro do header com os novos estilos */}
+                    <div style={styles.profileContainerHeader}>
+                        <img
+                            src={profileIcon}
+                            alt="Perfil"
+                            style={styles.profileIconHeader}
+                            onClick={() => setShowProfilePopup(!showProfilePopup)}
+                        />
+                        {showProfilePopup && (
+                            <div style={styles.profilePopup}>
+                                <img src={profileIcon} alt="Perfil" style={styles.popupProfileIcon} />
+                                <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
+                                <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
+                                <div style={styles.popupDivider}></div>
+                                <button onClick={handleMyAppointments} style={styles.myAppointmentsButton}>
+                                    Agendamentos
+                                </button>
+                                {/* NOVO: Botão de Contato */}
+                                <button onClick={handleContact} style={styles.contactButton}>
+                                    Contato
+                                </button>
+                                <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
+                            </div>
+                        )}
+                    </div>
+                </header>
 
                 <main style={styles.mainContent}>
                     <section style={styles.hero}>
@@ -268,6 +273,11 @@
                         </button>
                     </section>
                 </main>
+
+                {/* Footer na parte inferior */}
+                <footer style={styles.footer}>
+                    <p style={styles.footerText}>Agenda Corte © 2025 - Todos os direitos reservados.</p>
+                </footer>
             </div>
         );
     }
@@ -280,40 +290,52 @@
             minHeight: '100vh',
             backgroundColor: '#1a1a2e',
             color: 'white',
-            alignItems: 'center',
-            padding: '0px',
             boxSizing: 'border-box',
             width: '100%',
             overflowY: 'auto',
-            position: 'relative',
+            alignItems: 'stretch', // Mantido para que o header/main/footer ocupem a largura total
         },
-        backButtonContainer: {
-            position: 'absolute',
-            top: '20px',
-            left: '20px',
-            zIndex: 1000,
+        // ESTILOS DO HEADER (Copiados de Services/Apresentacao)
+        header: {
+            width: '100%',
+            padding: '20px',
+            boxSizing: 'border-box',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: '#2e2e4e',
         },
-        backButton: {
+        // NOVO ESTILO PARA O BOTÃO DE ÍCONE NO HEADER
+        headerIconButton: {
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            padding: '0',
+            padding: '10px', // Aumenta a área clicável
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
         },
-        backIcon: {
+        headerIconContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            textDecoration: 'none',
+            color: 'white',
+            backgroundColor: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+        },
+        headerIcon: {
             width: '32px',
             height: '32px',
+            objectFit: 'contain',
             filter: 'invert(53%) sepia(91%) saturate(301%) hue-rotate(139deg) brightness(98%) contrast(101%)',
         },
-        profileContainer: {
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            zIndex: 1000,
+        profileContainerHeader: {
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
         },
-        profileIcon: {
+        profileIconHeader: {
             width: '40px',
             height: '40px',
             cursor: 'pointer',
@@ -335,14 +357,6 @@
             alignItems: 'center',
             width: '220px',
             zIndex: 1000,
-        },
-        popupProfileIcon: {
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            backgroundColor: 'transparent',
-            padding: '0',
-            marginBottom: '15px',
         },
         popupUserName: {
             fontSize: '1.2em',
@@ -403,16 +417,20 @@
         mainContent: {
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
+            alignItems: 'center', // Centraliza o conteúdo horizontalmente
             width: '100%',
-            maxWidth: '700px', // Ajustado para a largura da imagem
-            paddingTop: '80px',
+            maxWidth: '700px', // Mantido para a largura da imagem
+            paddingTop: '20px', // Ajustado para dar espaço abaixo do header
+            paddingLeft: '20px',
+            paddingRight: '20px',
             boxSizing: 'border-box',
+            flexGrow: 1, // Permite que o main content ocupe o espaço restante
+            margin: '0 auto', // Centraliza o mainContent horizontalmente
         },
         hero: {
             textAlign: 'center',
             marginBottom: '40px',
-            padding: '0 20px',
+            width: '100%', // Garante que o hero ocupe a largura total do mainContent
         },
         title: {
             fontSize: '2.5em',
@@ -428,35 +446,36 @@
             color: '#aaaaaa',
             maxWidth: '600px',
             lineHeight: '1.6',
-            marginBottom: '20px', // Adicionado margem inferior para separar da mensagem do WhatsApp
+            marginBottom: '20px',
+            margin: '0 auto 20px auto', // Centraliza o parágrafo e adiciona margem inferior
         },
-        // ESTILO PARA A MENSAGEM DO WHATSAPP (MANTIDO E AJUSTADO SE NECESSÁRIO)
         whatsappMessage: {
             fontSize: '0.95em',
-            color: 'white', // Cor vermelha (nem muito escura, nem muito clara)
-            marginTop: '0px', // Removido o margin-top, pois já está dentro da seção com espaçamento
-            marginBottom: '20px', // Mantém o espaçamento inferior
+            color: 'white',
+            marginTop: '0px',
+            marginBottom: '20px',
             maxWidth: '600px',
             lineHeight: '1.5',
             padding: '10px 20px',
-            backgroundColor: '#3a3a5e', // Um fundo sutil para a mensagem
+            backgroundColor: '#3a3a5e',
             borderRadius: '8px',
-            border: '1px solid #00bcd4', // Borda com a mesma cor
-            textAlign: 'center', // Garante que o texto dentro seja centralizado
+            border: '1px solid #00bcd4',
+            textAlign: 'center',
             margin: '0 auto 20px auto', // Centraliza o bloco e adiciona margem inferior
         },
         selectionCard: {
             backgroundColor: '#2e2e4e',
             borderRadius: '15px',
             padding: '30px',
-            width: 'calc(100% - 40px)', // Para preencher a largura com padding
-            maxWidth: '600px', // Ajusta ao container principal
+            width: '100%', // Ocupa a largura total do mainContent
+            maxWidth: '600px', // Limita a largura do card para centralização
             boxShadow: '0 6px 15px rgba(0, 0, 0, 0.3)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             marginBottom: '30px',
             textAlign: 'center',
+            boxSizing: 'border-box', // Garante que padding não adicione largura extra
         },
         cardTitle: {
             fontSize: '1.6em',
@@ -466,7 +485,7 @@
         },
         dateGrid: {
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', // Ajusta o número de colunas
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
             gap: '15px',
             width: '100%',
             justifyContent: 'center',
@@ -486,12 +505,12 @@
             },
         },
         dateButtonSelected: {
-            backgroundColor: '#00ff00', // Verde vibrante para selecionado
+            backgroundColor: '#00ff00',
             color: '#1a1a2e',
         },
         timeGrid: {
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', // Ajusta para mais botões
+            gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))',
             gap: '15px',
             width: '100%',
             justifyContent: 'center',
@@ -511,7 +530,7 @@
             },
         },
         timeButtonSelected: {
-            backgroundColor: '#00ff00', // Verde vibrante para selecionado
+            backgroundColor: '#00ff00',
             color: '#1a1a2e',
         },
         timeButtonDisabled: {
@@ -551,6 +570,18 @@
         confirmButtonDisabled: {
             backgroundColor: '#00bcd480',
             cursor: 'not-allowed',
+        },
+        // ESTILOS DO FOOTER (Copiados de Apresentacao)
+        footer: {
+            width: '100%',
+            backgroundColor: '#2e2e4e',
+            color: '#888',
+            textAlign: 'center',
+            padding: '20px',
+        },
+        footerText: {
+            margin: '0',
+            fontSize: '0.9em',
         },
     };
 

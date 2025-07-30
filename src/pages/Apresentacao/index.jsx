@@ -5,19 +5,25 @@ import { Link } from 'react-router-dom';
 // Importar as imagens para esta página
 import logoPrincipal from '../../assets/apresentacao/image 4-Photoroom 2.png'; // Logo principal
 import backArrowIcon from '../../assets/apresentacao/seta-para-a-esquerda 3.png'; // Botão de voltar
+import suportIcon from '../../assets/apresentacao/suport.png'; // Ícone de suporte
+import corteImage from '../../assets/apresentacao/corte.png'; // Nova imagem de corte 1
+import corte2Image from '../../assets/apresentacao/corte2.png'; // Nova imagem de corte 2
 
 function Apresentacao() {
     return (
         <div style={styles.container}>
-            {/* Cabeçalho superior com o botão de voltar */}
-            <div style={styles.topHeader}>
-                <Link to="/home" style={styles.backButton}>
-                    <img src={backArrowIcon} alt="Voltar" style={styles.backIcon} />
+            {/* Header com botões de voltar e suporte */}
+            <header style={styles.header}>
+                <Link to="/home" style={styles.headerIconContainer}>
+                    <img src={backArrowIcon} alt="Voltar" style={styles.headerIcon} />
                 </Link>
-            </div>
+                <Link to="/contact" style={styles.headerIconContainer}>
+                    <img src={suportIcon} alt="Suporte" style={styles.headerIcon} />
+                </Link>
+            </header>
 
-            {/* Logo principal centralizada e em destaque */}
-            <div style={styles.mainLogoContainer}>
+            {/* Container para a logo principal */}
+            <div style={styles.logoContainer}>
                 <img src={logoPrincipal} alt="Agenda Corte Barbearia Logo" style={styles.mainLogo} />
             </div>
 
@@ -25,6 +31,16 @@ function Apresentacao() {
             <div style={styles.content}>
                 <h1 style={styles.title}>Bem-vindo à Experiência Agenda Corte</h1>
                 <p style={styles.subtitle}>Mais do que um corte, um estilo de vida.</p>
+                
+                {/* Botão de login moderno */}
+                <Link to="/login" style={styles.loginButton}>
+                    Agende seu horário
+                </Link>
+
+                <div style={styles.imageRow}>
+                    <img src={corteImage} alt="Corte de Cabelo Moderno" style={styles.haircutImage} />
+                    <img src={corte2Image} alt="Corte de Cabelo Clássico" style={styles.haircutImage} />
+                </div>
 
                 <div style={styles.section}>
                     <h2 style={styles.sectionTitle}>Nossa História</h2>
@@ -82,6 +98,11 @@ function Apresentacao() {
                     </p>
                 </div>
             </div>
+            
+            {/* Footer na parte inferior */}
+            <footer style={styles.footer}>
+                <p style={styles.footerText}>Agenda Corte © 2025 - Todos os direitos reservados.</p>
+            </footer>
         </div>
     );
 }
@@ -91,23 +112,24 @@ const styles = {
     container: {
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '100vh', // Garante que o container ocupe pelo menos a altura da viewport
+        minHeight: '100vh',
         backgroundColor: '#1a1a2e',
         color: 'white',
         alignItems: 'center', // Centraliza o conteúdo horizontalmente
-        padding: '0px',
         boxSizing: 'border-box',
         width: '100%',
         overflowY: 'auto', // Permite rolagem vertical no container da página
     },
-    topHeader: {
+    header: {
         width: '100%',
-        display: 'flex',
-        justifyContent: 'flex-start',
         padding: '20px',
         boxSizing: 'border-box',
+        display: 'flex',
+        justifyContent: 'space-between', // Alinha os ícones nas extremidades
+        alignItems: 'center',
+        backgroundColor: '#2e2e4e', // Cor igual à do footer
     },
-    backButton: {
+    headerIconContainer: {
         display: 'flex',
         alignItems: 'center',
         textDecoration: 'none',
@@ -115,24 +137,20 @@ const styles = {
         backgroundColor: 'transparent',
         border: 'none',
         cursor: 'pointer',
-        // Margens negativas para garantir que vá bem para o canto, se necessário
-        marginTop: '-10px',
-        marginLeft: '-10px',
     },
-    backIcon: {
+    headerIcon: {
         width: '30px',
         height: '30px',
         objectFit: 'contain',
     },
-    mainLogoContainer: {
+    logoContainer: {
         width: '100%',
+        padding: '10px 0',
         display: 'flex',
-        justifyContent: 'center',
-        paddingTop: '0px',
-        paddingBottom: '30px',
+        justifyContent: 'center', // Centraliza a logo
     },
     mainLogo: {
-        maxWidth: '300px',
+        maxWidth: '200px',
         height: 'auto',
         objectFit: 'contain',
     },
@@ -143,7 +161,7 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
         textAlign: 'center',
-        padding: '0 20px 40px 20px', // Adicionado padding inferior para o conteúdo
+        padding: '20px 20px 40px 20px',
         boxSizing: 'border-box',
     },
     title: {
@@ -153,8 +171,37 @@ const styles = {
     },
     subtitle: {
         fontSize: '1.2em',
-        marginBottom: '40px',
+        marginBottom: '20px',
         color: '#aaaaaa',
+    },
+    loginButton: {
+        display: 'inline-block',
+        padding: '15px 30px',
+        fontSize: '1.2em',
+        fontWeight: 'bold',
+        textDecoration: 'none',
+        color: 'white',
+        backgroundColor: '#00bcd4',
+        borderRadius: '50px', // Borda mais arredondada para um visual "moderno"
+        background: 'linear-gradient(45deg, #00bcd4, #00796b)', // Gradiente para um toque de modernidade
+        boxShadow: '0 4px 15px rgba(0, 188, 212, 0.4)',
+        transition: 'all 0.3s ease',
+        marginTop: '20px',
+        marginBottom: '40px',
+        cursor: 'pointer',
+    },
+    imageRow: {
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'space-around',
+        marginBottom: '30px',
+    },
+    haircutImage: {
+        maxWidth: '350px',
+        height: 'auto',
+        borderRadius: '8px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        objectFit: 'cover',
     },
     section: {
         marginBottom: '40px',
@@ -186,6 +233,18 @@ const styles = {
         lineHeight: '1.8',
         marginBottom: '10px',
     },
+    footer: {
+        width: '100%',
+        backgroundColor: '#2e2e4e',
+        color: '#888',
+        textAlign: 'center',
+        padding: '20px',
+        marginTop: 'auto',
+    },
+    footerText: {
+        margin: '0',
+        fontSize: '0.9em',
+    }
 };
 
 export default Apresentacao;

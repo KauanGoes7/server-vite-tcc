@@ -1,10 +1,13 @@
 // src/pages/Login/index.jsx
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../../api/api'; 
+import api from '../../api/api';
 import { AuthContext } from '../../App';
 
+// Importações de imagens
 import logoAgendaCorte from '../../assets/login/image 4-Photoroom 2.png';
+import backArrowIcon from '../../assets/apresentacao/seta-para-a-esquerda 3.png'; // Ícone de voltar
+import suportIcon from '../../assets/apresentacao/suport.png'; // Ícone de suporte
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -25,21 +28,13 @@ function Login() {
         try {
             // TENTATIVA 1: Tentar login com o backend
             const response = await api.post('/login', { email, password });
-            const userData = response.data; 
+            const userData = response.data;
 
-            console.log('Resposta do backend no login:', userData); // VERIFIQUE ESTE LOG NO CONSOLE!
+            console.log('Resposta do backend no login:', userData);
 
-            // --- ALTERAÇÃO AQUI: Ajuste para o formato de resposta do backend ---
-            // Se o backend retorna o objeto do usuário DIRETAMENTE (sem a chave 'user' aninhada),
-            // use 'authLogin(userData);'
-            // Se o backend retorna { message: "...", user: { ... } }, use 'authLogin(userData.user);'
-            // Com base no seu relato, é provável que seja 'authLogin(userData);'
-            
-            // Vamos testar com 'authLogin(userData);' primeiro, que é o mais provável.
-            // Se o backend retornar um objeto de usuário válido diretamente, isso funcionará.
-            if (userData && (userData.id || userData.email)) { // Verifica se userData é um objeto de usuário válido
-                authLogin(userData); // <--- MUDANÇA MAIS PROVÁVEL PARA O SEU CASO
-                navigate('/home'); 
+            if (userData && (userData.id || userData.email)) {
+                authLogin(userData);
+                navigate('/home');
             } else {
                 console.error("Formato de dados do usuário inesperado na resposta do login do backend:", userData);
                 setError("Erro inesperado na resposta do servidor. Formato de dados inválido.");
@@ -47,7 +42,7 @@ function Login() {
 
         } catch (err) {
             console.error('Erro no login do backend:', err);
-            
+
             let backendLoginFailed = false;
             if (err.response) {
                 if (err.response.status === 401 || err.response.status === 404) {
@@ -56,20 +51,20 @@ function Login() {
                     setError(err.response.data.error || 'Erro ao conectar com o servidor. Tente novamente mais tarde.');
                 }
             } else if (err.request) {
-                backendLoginFailed = true; 
+                backendLoginFailed = true;
                 setError('Não foi possível conectar ao servidor. Verifique sua conexão ou se o backend está online.');
             } else {
                 setError('Ocorreu um erro inesperado. Tente novamente.');
             }
 
             // TENTATIVA 2: Se o login do backend falhou, tentar login com a conta demo do localStorage
-            if (backendLoginFailed || err.request) { 
+            if (backendLoginFailed || err.request) {
                 try {
                     const storedDemoUser = JSON.parse(localStorage.getItem('demoRegisteredUser') || 'null');
 
                     if (storedDemoUser && storedDemoUser.email === email && storedDemoUser.password === password) {
                         console.log('Login bem-sucedido com conta demo local:', storedDemoUser);
-                        authLogin(storedDemoUser); 
+                        authLogin(storedDemoUser);
                         navigate('/home');
                     } else {
                         setError('Email ou senha incorretos. Por favor, verifique suas credenciais.');
@@ -84,41 +79,54 @@ function Login() {
 
     return (
         <div style={styles.container}>
-            {/* Link para a página de Apresentação no canto superior direito */}
-            <Link to="/apresentacao" style={styles.apresentacaoLink}>
-                Apresentação
-            </Link>
+            {/* Header com botões de voltar e suporte */}
+            <header style={styles.header}>
+                <Link to="/apresentacao" style={styles.headerIconContainer}>
+                    <img src={backArrowIcon} alt="Voltar" style={styles.headerIcon} />
+                </Link>
+                <Link to="/contact" style={styles.headerIconContainer}>
+                    <img src={suportIcon} alt="Suporte" style={styles.headerIcon} />
+                </Link>
+            </header>
 
-            <div style={styles.leftPanel}>
-                <img src={logoAgendaCorte} alt="Agenda Corte Barbearia Logo" style={styles.logo} />
-            </div>
-            <div style={styles.rightPanel}>
-                <form onSubmit={handleSubmit} style={styles.form}>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email"
-                        style={styles.input}
-                        required
-                    />
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Senha"
-                        style={styles.input}
-                        required
-                    />
-                    {error && <p style={styles.errorText}>{error}</p>}
-                    <button type="submit" style={styles.button}>Entrar</button>
-                </form>
-                <p style={styles.registerText}>
-                    <Link to="/register" style={styles.registerLink}>CRIAR UM USUÁRIO</Link>
-                </p>
-            </div>
+            {/* Conteúdo principal (painéis) */}
+            <main style={styles.mainContent}>
+                <div style={styles.leftPanel}>
+                    <img src={logoAgendaCorte} alt="Agenda Corte Barbearia Logo" style={styles.logo} />
+                </div>
+                <div style={styles.rightPanel}>
+                    <form onSubmit={handleSubmit} style={styles.form}>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Email"
+                            style={styles.input}
+                            required
+                        />
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Senha"
+                            style={styles.input}
+                            required
+                        />
+                        {error && <p style={styles.errorText}>{error}</p>}
+                        <button type="submit" style={styles.button}>Entrar</button>
+                    </form>
+                    <p style={styles.registerText}>
+                        <Link to="/register" style={styles.registerLink}>CRIAR UM USUÁRIO</Link>
+                    </p>
+                </div>
+            </main>
+
+            {/* Footer na parte inferior */}
+            <footer style={styles.footer}>
+                <p style={styles.footerText}>Agenda Corte © 2025 - Todos os direitos reservados.</p>
+            </footer>
         </div>
     );
 }
@@ -126,34 +134,48 @@ function Login() {
 const styles = {
     container: {
         display: 'flex',
+        flexDirection: 'column', // Altera para coluna para empilhar header, conteúdo e footer
         minHeight: '100vh',
         backgroundColor: '#1a1a2e',
         color: 'white',
-        justifyContent: 'center',
+        boxSizing: 'border-box',
+        width: '100%',
+        position: 'relative',
+    },
+    header: {
+        width: '100%',
+        padding: '20px',
+        boxSizing: 'border-box',
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
+        backgroundColor: '#2e2e4e',
+        zIndex: 100, // Garante que o header fique acima de outros elementos
+    },
+    headerIconContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        color: 'white',
+        backgroundColor: 'transparent',
+        border: 'none',
+        cursor: 'pointer',
+    },
+    headerIcon: {
+        width: '30px',
+        height: '30px',
+        objectFit: 'contain',
+        filter: 'invert(53%) sepia(91%) saturate(301%) hue-rotate(139deg) brightness(98%) contrast(101%)', // Adicionado filtro para a cor dos ícones
+    },
+    mainContent: {
+        flexGrow: 1, // Ocupa todo o espaço restante entre o header e o footer
+        display: 'flex',
+        justifyContent: 'center', // Centraliza os painéis horizontalmente
+        alignItems: 'center', // Centraliza os painéis verticalmente
         padding: '20px',
         boxSizing: 'border-box',
         gap: '50px',
-        position: 'relative', // Adicionado para posicionamento absoluto do link
-    },
-    // NOVO ESTILO: Link de Apresentação
-    apresentacaoLink: {
-        position: 'absolute',
-        top: '20px',
-        right: '20px',
-        color: '#00bcd4', // Cor do link
-        textDecoration: 'none',
-        fontSize: '1em',
-        fontWeight: 'bold',
-        padding: '8px 15px',
-        borderRadius: '20px',
-        border: '1px solid #00bcd4',
-        transition: 'background-color 0.3s ease, color 0.3s ease',
-        zIndex: 1000,
-        '&:hover': {
-            backgroundColor: '#00bcd4',
-            color: '#1a1a2e',
-        },
+        flexWrap: 'wrap', // Permite que os painéis quebrem para a próxima linha em telas menores
     },
     leftPanel: {
         display: 'flex',
@@ -172,25 +194,25 @@ const styles = {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: '30px',
+        padding: '40px',
         backgroundColor: '#2e2e4e',
         borderRadius: '15px',
-        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.4)',
-        maxWidth: '320px',
-        minWidth: '280px',
+        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)',
+        width: '90%',
+        maxWidth: '400px',
         height: 'fit-content',
     },
     form: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '18px',
+        gap: '20px',
         width: '100%',
     },
     input: {
         backgroundColor: '#4a4a6e',
         color: 'white',
-        padding: '12px 18px',
-        borderRadius: '25px',
+        padding: '15px',
+        borderRadius: '8px',
         border: 'none',
         fontSize: '1em',
         outline: 'none',
@@ -198,15 +220,21 @@ const styles = {
     button: {
         backgroundColor: '#00bcd4',
         color: 'white',
-        padding: '12px 18px',
-        borderRadius: '25px',
+        padding: '15px 25px',
+        borderRadius: '50px',
+        background: 'linear-gradient(45deg, #00bcd4, #00796b)',
         border: 'none',
         fontSize: '1.1em',
         cursor: 'pointer',
         fontWeight: 'bold',
-        transition: 'background-color 0.3s ease, transform 0.2s ease',
+        transition: 'all 0.3s ease',
+        boxShadow: '0 4px 10px rgba(0, 188, 212, 0.3)',
         marginTop: '10px',
         outline: 'none',
+        '&:hover': {
+            transform: 'scale(1.05)',
+            boxShadow: '0 6px 15px rgba(0, 188, 212, 0.5)',
+        },
     },
     errorText: {
         color: '#ff6b6b',
@@ -216,15 +244,32 @@ const styles = {
         textAlign: 'center',
     },
     registerText: {
-        marginTop: '25px',
-        color: '#aaaaaa',
-        fontSize: '0.85em',
+        marginTop: '20px',
+        color: '#cccccc',
+        fontSize: '0.95em',
     },
     registerLink: {
         color: '#00bcd4',
         textDecoration: 'none',
         fontWeight: 'bold',
-        letterSpacing: '0.5px',
+        transition: 'color 0.3s ease',
+        '&:hover': {
+            color: '#00796b',
+        },
     },
+    footer: {
+        width: '100%',
+        backgroundColor: '#2e2e4e',
+        color: '#888',
+        textAlign: 'center',
+        padding: '20px',
+        boxSizing: 'border-box', // Garante que o padding não aumente a largura total
+        marginTop: 'auto', // Empurra o footer para o final se houver espaço
+    },
+    footerText: {
+        margin: '0',
+        fontSize: '0.9em',
+    }
 };
+
 export default Login;

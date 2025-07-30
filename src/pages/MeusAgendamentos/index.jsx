@@ -1,6 +1,6 @@
 // src/pages/MeusAgendamentos/index.jsx
 import React, { useState, useContext, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Garante que useNavigate está importado
 import { AuthContext } from '../../App'; // Ajuste o caminho conforme sua estrutura
 
 // Ícones de imagem
@@ -39,6 +39,11 @@ function MeusAgendamentos() {
 
     const handleMyAppointments = () => {
         // Já está na página Meus Agendamentos
+        setShowProfilePopup(false);
+    };
+
+    const handleContact = () => {
+        navigate('/contact');
         setShowProfilePopup(false);
     };
 
@@ -87,16 +92,19 @@ function MeusAgendamentos() {
 
     return (
         <div style={styles.container}>
-            {/* Botões de Navegação */}
-            <div style={styles.header}>
-                <Link to="/home" style={styles.backButton}>
-                    <img src={backArrowIcon} alt="Voltar" style={styles.backIcon} />
-                </Link>
-                <div style={styles.profileContainer}>
+            {/* Header com botões de voltar e perfil */}
+            <header style={styles.header}>
+                {/* Botão de Voltar - Agora usa navigate(-1) */}
+                <button onClick={() => navigate(-1)} style={styles.headerIconButton}>
+                    <img src={backArrowIcon} alt="Voltar" style={styles.headerIcon} />
+                </button>
+
+                {/* Ícone de Perfil e Popup - Agora dentro do header com os novos estilos */}
+                <div style={styles.profileContainerHeader}>
                     <img
                         src={profileIcon}
                         alt="Perfil"
-                        style={styles.profileIcon}
+                        style={styles.profileIconHeader}
                         onClick={() => setShowProfilePopup(!showProfilePopup)}
                     />
                     {showProfilePopup && (
@@ -106,58 +114,68 @@ function MeusAgendamentos() {
                             <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
                             <div style={styles.popupDivider}></div>
                             <button onClick={handleMyAppointments} style={styles.myAppointmentsButton}>
-                                Meus Agendamentos
+                                Agendamentos
+                            </button>
+                            <button onClick={handleContact} style={styles.contactButton}>
+                                Contato
                             </button>
                             <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
                         </div>
                     )}
                 </div>
-            </div>
+            </header>
 
-            <h1 style={styles.title}>Agendamentos</h1>
+            <main style={styles.mainContent}>
+                <h1 style={styles.title}>Meus Agendamentos</h1>
 
-            <section style={styles.appointmentsList}>
-                {appointments.length > 0 ? (
-                    appointments.map(appointment => (
-                        <div key={appointment.id} style={styles.appointmentCard}>
-                            <div style={styles.appointmentDetail}>
-                                <span style={styles.detailLabel}>Data:</span>
-                                <span style={styles.detailValue}>{formatDisplayDate(appointment.data)}</span>
-                            </div>
-                            <div style={styles.appointmentDetail}>
-                                <span style={styles.detailLabel}>Horário:</span>
-                                <span style={styles.detailValue}>{appointment.hora}</span>
-                            </div>
-                            <div style={styles.appointmentDetail}>
-                                <span style={styles.detailLabel}>Barbeiro:</span>
-                                <span style={styles.detailValue}>{appointment.barbeiro?.Nome || 'N/A'}</span>
-                            </div>
-                            <div style={styles.appointmentDetail}>
-                                <span style={styles.detailLabel}>Serviços:</span>
-                                <div style={styles.serviceList}>
-                                    {appointment.services?.length > 0 ? (
-                                        appointment.services.map((service, idx) => (
-                                            <span key={idx} style={styles.serviceTag}>
-                                                {service.NomeServico}
-                                            </span>
-                                        ))
-                                    ) : (
-                                        <span style={styles.detailValue}>Nenhum serviço.</span>
-                                    )}
+                <section style={styles.appointmentsList}>
+                    {appointments.length > 0 ? (
+                        appointments.map(appointment => (
+                            <div key={appointment.id} style={styles.appointmentCard}>
+                                <div style={styles.appointmentDetail}>
+                                    <span style={styles.detailLabel}>Data:</span>
+                                    <span style={styles.detailValue}>{formatDisplayDate(appointment.data)}</span>
                                 </div>
+                                <div style={styles.appointmentDetail}>
+                                    <span style={styles.detailLabel}>Horário:</span>
+                                    <span style={styles.detailValue}>{appointment.hora}</span>
+                                </div>
+                                <div style={styles.appointmentDetail}>
+                                    <span style={styles.detailLabel}>Barbeiro:</span>
+                                    <span style={styles.detailValue}>{appointment.barbeiro?.Nome || 'N/A'}</span>
+                                </div>
+                                <div style={styles.appointmentDetail}>
+                                    <span style={styles.detailLabel}>Serviços:</span>
+                                    <div style={styles.serviceList}>
+                                        {appointment.services?.length > 0 ? (
+                                            appointment.services.map((service, idx) => (
+                                                <span key={idx} style={styles.serviceTag}>
+                                                    {service.NomeServico}
+                                                </span>
+                                            ))
+                                        ) : (
+                                            <span style={styles.detailValue}>Nenhum serviço.</span>
+                                        )}
+                                    </div>
+                                </div>
+                                <button
+                                    style={styles.cancelButton}
+                                    onClick={() => handleCancelClick(appointment)}
+                                >
+                                    Cancelar Agendamento
+                                </button>
                             </div>
-                            <button
-                                style={styles.cancelButton}
-                                onClick={() => handleCancelClick(appointment)}
-                            >
-                                Cancelar Agendamento
-                            </button>
-                        </div>
-                    ))
-                ) : (
-                    <p style={styles.noAppointmentsMessage}>Você não tem agendamentos ativos.</p>
-                )}
-            </section>
+                        ))
+                    ) : (
+                        <p style={styles.noAppointmentsMessage}>Você não tem agendamentos ativos.</p>
+                    )}
+                </section>
+            </main>
+
+            {/* Footer na parte inferior */}
+            <footer style={styles.footer}>
+                <p style={styles.footerText}>Agenda Corte © 2025 - Todos os direitos reservados.</p>
+            </footer>
 
             {/* Modal de Confirmação de Cancelamento */}
             {showCancelModal && (
@@ -166,8 +184,8 @@ function MeusAgendamentos() {
                         <h2 style={styles.modalTitle}>Confirmar Cancelamento</h2>
                         <p style={styles.modalMessage}>Tem certeza que deseja cancelar este agendamento?</p>
                         <p style={styles.modalDetails}>
-                            Data: {formatDisplayDate(appointmentToCancel?.data)}<br/>
-                            Horário: {appointmentToCancel?.hora}<br/>
+                            Data: {formatDisplayDate(appointmentToCancel?.data)}<br />
+                            Horário: {appointmentToCancel?.hora}<br />
                             Barbeiro: {appointmentToCancel?.barbeiro?.Nome}
                         </p>
                         <div style={styles.modalButtons}>
@@ -192,41 +210,55 @@ const styles = {
     container: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
         minHeight: '100vh',
         backgroundColor: '#1a1a2e',
         color: 'white',
-        padding: '20px',
         boxSizing: 'border-box',
+        width: '100%',
+        overflowY: 'auto',
+        alignItems: 'stretch', // Garante que header/main/footer ocupem a largura total
     },
+    // ESTILOS DO HEADER (Copiados de outras telas para consistência)
     header: {
         width: '100%',
+        padding: '20px',
+        boxSizing: 'border-box',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        position: 'absolute',
-        top: '20px',
-        padding: '0 20px',
-        boxSizing: 'border-box',
+        backgroundColor: '#2e2e4e',
     },
-    backButton: {
+    // NOVO ESTILO PARA O BOTÃO DE ÍCONE NO HEADER
+    headerIconButton: {
         background: 'none',
         border: 'none',
         cursor: 'pointer',
-        padding: '0',
+        padding: '10px', // Aumenta a área clicável
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
     },
-    backIcon: {
+    headerIconContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        color: 'white',
+        backgroundColor: 'transparent',
+        border: 'none',
+        cursor: 'pointer',
+    },
+    headerIcon: {
         width: '32px',
         height: '32px',
+        objectFit: 'contain',
         filter: 'invert(53%) sepia(91%) saturate(301%) hue-rotate(139deg) brightness(98%) contrast(101%)',
     },
-    profileContainer: {
+    profileContainerHeader: {
         position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
     },
-    profileIcon: {
+    profileIconHeader: {
         width: '40px',
         height: '40px',
         cursor: 'pointer',
@@ -237,7 +269,7 @@ const styles = {
     },
     profilePopup: {
         position: 'absolute',
-        top: '50px',
+        top: '55px',
         right: '0',
         backgroundColor: '#2e2e4e',
         borderRadius: '10px',
@@ -248,14 +280,6 @@ const styles = {
         alignItems: 'center',
         width: '220px',
         zIndex: 1000,
-    },
-    popupProfileIcon: {
-        width: '60px',
-        height: '60px',
-        borderRadius: '50%',
-        backgroundColor: 'transparent',
-        padding: '0',
-        marginBottom: '15px',
     },
     popupUserName: {
         fontSize: '1.2em',
@@ -287,6 +311,19 @@ const styles = {
         width: '100%',
         marginBottom: '10px',
     },
+    contactButton: {
+        backgroundColor: 'transparent',
+        color: '#00bcd4',
+        border: '1px solid #00bcd4',
+        padding: '10px 20px',
+        borderRadius: '20px',
+        cursor: 'pointer',
+        fontSize: '1em',
+        fontWeight: 'bold',
+        transition: 'background-color 0.3s ease, color 0.3s ease',
+        width: '100%',
+        marginBottom: '10px',
+    },
     logoutButton: {
         backgroundColor: 'transparent',
         color: 'red',
@@ -299,16 +336,27 @@ const styles = {
         transition: 'background-color 0.3s ease, color 0.3s ease',
         width: '100%',
     },
+    mainContent: {
+        flexGrow: 1, // Ocupa o espaço restante entre o header e o footer
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center', // Centraliza o conteúdo horizontalmente
+        width: '100%',
+        maxWidth: '700px', // Limita a largura do conteúdo principal
+        margin: '0 auto', // Centraliza o mainContent horizontalmente
+        padding: '20px', // Adiciona padding geral para o conteúdo
+        boxSizing: 'border-box',
+    },
     title: {
         fontSize: '2.2em',
         marginBottom: '40px',
-        marginTop: '80px',
+        marginTop: '20px', // Ajustado para dar espaço abaixo do header
         textAlign: 'center',
         color: '#00bcd4',
     },
     appointmentsList: {
         width: '100%',
-        maxWidth: '600px',
+        maxWidth: '600px', // Limita a largura da lista de agendamentos
         display: 'flex',
         flexDirection: 'column',
         gap: '20px',
@@ -452,25 +500,38 @@ const styles = {
             color: '#1a1a2e',
         },
     },
-    // NOVO ESTILO PARA O TOAST DE SUCESSO
     successToast: {
         position: 'fixed',
         bottom: '30px',
-        backgroundColor: '#4CAF50', // Verde de sucesso
+        left: '50%', // Centraliza horizontalmente
+        transform: 'translateX(-50%)', // Ajusta para o centro exato
+        backgroundColor: '#4CAF50',
         color: 'white',
         padding: '15px 25px',
         borderRadius: '8px',
         boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
         zIndex: 3000,
         fontSize: '1.1em',
-        animation: 'fadeInOut 3s forwards', // Animação de fade in/out
-        // Estilos para animação (poderiam ir em um arquivo CSS separado se a aplicação crescer)
-        '@keyframes fadeInOut': {
-            '0%': { opacity: 0, transform: 'translateY(20px)' },
-            '10%': { opacity: 1, transform: 'translateY(0)' },
-            '90%': { opacity: 1, transform: 'translateY(0)' },
-            '100%': { opacity: 0, transform: 'translateY(20px)' },
-        },
+        animation: 'fadeInOut 3s forwards',
+    },
+    '@keyframes fadeInOut': { // Ajustado para apenas opacidade
+        '0%': { opacity: 0 },
+        '10%': { opacity: 1 },
+        '90%': { opacity: 1 },
+        '100%': { opacity: 0 },
+    },
+    // ESTILOS DO FOOTER (Copiados de Apresentacao)
+    footer: {
+        width: '100%',
+        backgroundColor: '#2e2e4e',
+        color: '#888',
+        textAlign: 'center',
+        padding: '20px',
+        marginTop: 'auto', // Garante que o footer fique na parte inferior
+    },
+    footerText: {
+        margin: '0',
+        fontSize: '0.9em',
     },
 };
 

@@ -1,15 +1,16 @@
 // src/pages/Home/index.jsx
 
-import React, { useState, useContext } from 'react'; // Adicionado useState
+import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../App';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Garante que useNavigate está importado
 
 // Importar as imagens
-import logoAgendaCorte from '../../assets/Home/image 4-Photoroom 2.png'; // Logo principal
+import logoAgendaCorte from '../../assets/Home/image 4-Photoroom 2.png'; // Logo principal do conteúdo
+import logoPrincipal from '../../assets/apresentacao/image 4-Photoroom 2.png'; // Logo para o footer (do apresentacao)
 
-// Ícones reutilizados de outras telas
-import backArrowIcon from '../../assets/servicos/seta-para-a-esquerda 3.png';
-import profileIcon from '../../assets/servicos/usuario-de-perfil 2.png';
+// Ícones reutilizados de outras telas e de Apresentacao
+import backArrowIcon from '../../assets/servicos/seta-para-a-esquerda 3.png'; // Seta de voltar
+import profileIcon from '../../assets/servicos/usuario-de-perfil 2.png'; // Ícone de perfil
 
 
 function Home() {
@@ -38,59 +39,58 @@ function Home() {
 
     return (
         <div style={styles.container}>
-            {/* Botão de Voltar */}
-            <div style={styles.backButtonContainer}>
-                <Link to="/login" style={styles.backButton}> {/* Volta para a tela de Login */}
-                    <img
-                        src={backArrowIcon}
-                        alt="Voltar"
-                        style={styles.backIcon}
-                    />
-                </Link>
-            </div>
-
-            {/* Ícone de Perfil e Popup */}
-            <div style={styles.profileContainer}>
-                <img
-                    src={profileIcon}
-                    alt="Perfil"
-                    style={styles.profileIcon}
-                    onClick={() => setShowProfilePopup(!showProfilePopup)}
-                />
-                {showProfilePopup && (
-                    <div style={styles.profilePopup}>
-                        <img src={profileIcon} alt="Perfil" style={styles.popupProfileIcon} />
-                        <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
-                        <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
-                        <div style={styles.popupDivider}></div>
-                        <button onClick={handleMyAppointments} style={styles.myAppointmentsButton}>
-                            Meus Agendamentos
-                        </button>
-                        <button onClick={handleContact} style={styles.contactButton}>
-                            Contato
-                        </button>
-                        <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
-                    </div>
-                )}
-            </div>
-
-            {/* Conteúdo Central */}
-            <div style={styles.content}>
-                <img src={logoAgendaCorte} alt="Agenda Corte Barbearia Logo" style={styles.logo} />
-                <p style={styles.text}>Estilo não se improvisa.</p>
-                <p style={styles.text}>Agende agora.</p>
-                <button
-                    style={styles.button}
-                    onClick={handleAgendarClick}
-                >
-                    Agendar
+            {/* Header com botões de voltar e suporte (estilo Apresentacao) */}
+            <header style={styles.header}>
+                {/* Botão de Voltar - Agora usa navigate(-1) */}
+                <button onClick={() => navigate(-1)} style={styles.headerIconButton}>
+                    <img src={backArrowIcon} alt="Voltar" style={styles.headerIcon} />
                 </button>
-            </div>
 
-            {/* Rodapé (vazio por enquanto) */}
-            <div style={styles.footer}>
-                {/* Conteúdo futuro, se houver */}
-            </div>
+                {/* Ícone de Perfil e Popup - Agora dentro do header */}
+                <div style={styles.profileContainerHeader}> {/* Novo container para o perfil dentro do header */}
+                    <img
+                        src={profileIcon}
+                        alt="Perfil"
+                        style={styles.profileIconHeader} 
+                        onClick={() => setShowProfilePopup(!showProfilePopup)}
+                    />
+                    {showProfilePopup && (
+                        <div style={styles.profilePopup}>
+                            <img src={profileIcon} alt="Perfil" style={styles.popupProfileIcon} />
+                            <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
+                            <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
+                            <div style={styles.popupDivider}></div>
+                            <button onClick={handleMyAppointments} style={styles.myAppointmentsButton}>
+                                Agendamentos
+                            </button>
+                            <button onClick={handleContact} style={styles.contactButton}>
+                                Contato
+                            </button>
+                            <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
+                        </div>
+                    )}
+                </div>
+            </header>
+
+            {/* Conteúdo Central - Agora dentro de uma tag <main> */}
+            <main style={styles.mainContent}>
+                <div style={styles.content}>
+                    <img src={logoAgendaCorte} alt="Agenda Corte Barbearia Logo" style={styles.logo} />
+                    <p style={styles.text}>Estilo não se improvisa.</p>
+                    <p style={styles.text}>Agende agora.</p>
+                    <button
+                        style={styles.button}
+                        onClick={handleAgendarClick}
+                    >
+                        Agendar
+                    </button>
+                </div>
+            </main>
+
+            {/* Footer na parte inferior (estilo Apresentacao) */}
+            <footer style={styles.footer}>
+                <p style={styles.footerText}>Agenda Corte © 2025 - Todos os direitos reservados.</p>
+            </footer>
         </div>
     );
 }
@@ -99,47 +99,55 @@ function Home() {
 const styles = {
     container: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column', // Empilha header, mainContent e footer
         minHeight: '100vh',
         backgroundColor: '#1a1a2e',
         color: 'white',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0px',
         boxSizing: 'border-box',
         width: '100%',
-        position: 'relative', // Essencial para posicionamento absoluto dos ícones
+        overflowY: 'auto', // Permite rolagem se o conteúdo for muito grande
     },
-    // Removidos: header, headerIconLeft, presentationLinkRight
-    
-    // NOVOS ESTILOS PARA O CABEÇALHO PADRÃO
-    backButtonContainer: {
-        position: 'absolute',
-        top: '20px',
-        left: '20px',
-        zIndex: 1000,
+    // ESTILOS DO HEADER (Copiados de Apresentacao e ajustados)
+    header: {
+        width: '100%',
+        padding: '20px',
+        boxSizing: 'border-box',
+        display: 'flex',
+        justifyContent: 'space-between', // Alinha os ícones nas extremidades
+        alignItems: 'center',
+        backgroundColor: '#2e2e4e', // Cor igual à do footer
     },
-    backButton: {
+    // NOVO ESTILO PARA O BOTÃO DE ÍCONE NO HEADER
+    headerIconButton: {
         background: 'none',
         border: 'none',
         cursor: 'pointer',
-        padding: '0',
+        padding: '10px', // Aumenta a área clicável
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
     },
-    backIcon: {
-        width: '32px',
-        height: '32px',
-        filter: 'invert(53%) sepia(91%) saturate(301%) hue-rotate(139deg) brightness(98%) contrast(101%)',
+    headerIconContainer: { // Para o link de voltar
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        color: 'white',
+        backgroundColor: 'transparent',
+        border: 'none',
+        cursor: 'pointer',
     },
-    profileContainer: {
-        position: 'absolute',
-        top: '20px',
-        right: '20px',
-        zIndex: 1000,
+    headerIcon: { // Para a imagem da seta de voltar
+        width: '30px',
+        height: '30px',
+        objectFit: 'contain',
+        filter: 'invert(53%) sepia(91%) saturate(301%) hue-rotate(139deg) brightness(98%) contrast(101%)', // Mantém a cor original da seta
     },
-    profileIcon: {
+    profileContainerHeader: { // Novo container para o ícone de perfil dentro do header
+        position: 'relative', // Para o popup se posicionar corretamente
+        display: 'flex',
+        alignItems: 'center',
+    },
+    profileIconHeader: { // Novo estilo para o ícone de perfil dentro do header
         width: '40px',
         height: '40px',
         cursor: 'pointer',
@@ -148,9 +156,9 @@ const styles = {
         padding: '0',
         boxSizing: 'border-box',
     },
-    profilePopup: {
+    profilePopup: { // Mantém o estilo do popup, mas garante que 'top' seja relativo ao 'profileContainerHeader'
         position: 'absolute',
-        top: '55px',
+        top: '55px', // Ajustado para ficar abaixo do ícone
         right: '0',
         backgroundColor: '#2e2e4e',
         borderRadius: '10px',
@@ -225,16 +233,24 @@ const styles = {
         transition: 'background-color 0.3s ease, color 0.3s ease',
         width: '100%',
     },
-    // FIM DOS NOVOS ESTILOS DE CABEÇALHO
+    // FIM DOS ESTILOS DO HEADER
 
-    content: {
-        flexGrow: 1,
+    mainContent: {
+        flexGrow: 1, // Ocupa todo o espaço restante entre o header e o footer
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
         padding: '20px',
+    },
+    content: { // Mantido para o conteúdo central original
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        width: '100%',
     },
     logo: {
         maxWidth: '400px',
@@ -258,12 +274,17 @@ const styles = {
         marginTop: '40px',
         outline: 'none',
     },
+    // ESTILOS DO FOOTER (Copiados de Apresentacao)
     footer: {
         width: '100%',
-        height: '50px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#2e2e4e',
+        color: '#888',
+        textAlign: 'center',
+        padding: '20px',
+    },
+    footerText: {
+        margin: '0',
+        fontSize: '0.9em',
     },
 };
 

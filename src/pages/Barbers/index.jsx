@@ -4,9 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../App';
 
 // Importar os ícones necessários.
-import backArrowIcon from '../../assets/barbeiro/seta-para-a-esquerda 3.png'; // Caminhos confirmados
-import profileIcon from '../../assets/barbeiro/usuario-de-perfil 2.png';         // Caminhos confirmados
-import barberIconImage from '../../assets/barbeiro/barbeiro 1.png'; // Caminho confirmado e renomeado para evitar conflito
+import backArrowIcon from '../../assets/servicos/seta-para-a-esquerda 3.png';
+import profileIcon from '../../assets/servicos/usuario-de-perfil 2.png';
+import barberIconImage from '../../assets/barbeiro/barbeiro 1.png';
 
 function Barbeiros() {
     const { user, logout } = useContext(AuthContext);
@@ -51,18 +51,16 @@ function Barbeiros() {
 
     const handleMyAppointments = () => {
         navigate('/meus-agendamentos');
-        setShowProfilePopup(false); // Fecha o popup após navegar
+        setShowProfilePopup(false);
     };
 
-    // NOVO: Função para navegar para a página de Contato
     const handleContact = () => {
-        navigate('/contact'); // Supondo que você tenha uma rota '/contact'
-        setShowProfilePopup(false); // Fecha o popup após navegar
+        navigate('/contact');
+        setShowProfilePopup(false);
     };
 
     const handleBarberSelect = (barberId) => {
         setSelectedBarberId(barberId);
-        // Salva o ID do barbeiro selecionado no localStorage imediatamente
         localStorage.setItem('selectedBarberId', barberId);
     };
 
@@ -71,47 +69,43 @@ function Barbeiros() {
             alert('Por favor, selecione um barbeiro para continuar.');
             return;
         }
-        // O ID do barbeiro já foi salvo em handleBarberSelect
-        navigate('/AgendaData'); // Navega para a tela de agenda
+        navigate('/AgendaData');
     };
 
     return (
         <div style={styles.container}>
-            <div style={styles.backButtonContainer}>
-                <Link to="/services" style={styles.backButton}>
+            <header style={styles.header}>
+                <button onClick={() => navigate(-1)} style={styles.headerIconButton}>
                     <img
                         src={backArrowIcon}
                         alt="Voltar"
-                        style={styles.backIcon}
+                        style={styles.headerIcon}
                     />
-                </Link>
-            </div>
-
-            <div style={styles.profileContainer}>
-                <img
-                    src={profileIcon}
-                    alt="Perfil"
-                    style={styles.profileIcon}
-                    onClick={() => setShowProfilePopup(!showProfilePopup)}
-                />
-                {showProfilePopup && (
-                    <div style={styles.profilePopup}>
-                        <img src={profileIcon} alt="Perfil" style={styles.popupProfileIcon} />
-                        <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
-                        <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
-                        <div style={styles.popupDivider}></div>
-                        {/* Botão Meus Agendamentos */}
-                        <button onClick={handleMyAppointments} style={styles.myAppointmentsButton}>
-                         Agendamentos
-                        </button>
-                        {/* NOVO: Botão de Contato */}
-                        <button onClick={handleContact} style={styles.contactButton}>
-                            Contato
-                        </button>
-                        <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
-                    </div>
-                )}
-            </div>
+                </button>
+                <div style={styles.profileContainerHeader}>
+                    <img
+                        src={profileIcon}
+                        alt="Perfil"
+                        style={styles.profileIconHeader}
+                        onClick={() => setShowProfilePopup(!showProfilePopup)}
+                    />
+                    {showProfilePopup && (
+                        <div style={styles.profilePopup}>
+                            <img src={profileIcon} alt="Perfil" style={styles.popupProfileIcon} />
+                            <p style={styles.popupUserName}>{user?.name || '[Nome da Conta]'}</p>
+                            <p style={styles.popupUserEmail}>{user?.email || 'email@exemplo.com'}</p>
+                            <div style={styles.popupDivider}></div>
+                            <button onClick={handleMyAppointments} style={styles.myAppointmentsButton}>
+                                Agendamentos
+                            </button>
+                            <button onClick={handleContact} style={styles.contactButton}>
+                                Contato
+                            </button>
+                            <button onClick={handleLogout} style={styles.logoutButton}>Deslogar</button>
+                        </div>
+                    )}
+                </div>
+            </header>
 
             <main style={styles.mainContent}>
                 <section style={styles.heroSection}>
@@ -119,6 +113,7 @@ function Barbeiros() {
                         ESCOLHA O SEU{' '}
                         <span style={{ color: 'rgb(16, 175, 232)' }}>BARBEIRO</span>
                     </h1>
+                    {/* A frase "Selecione o profissional que irá cuidar do seu estilo." */}
                     <p style={styles.subtitle}>Selecione o profissional que irá cuidar do seu estilo.</p>
                     <p style={styles.selectedServicesText}>
                         Serviços selecionados: {selectedServiceNames.join(', ')}
@@ -154,11 +149,14 @@ function Barbeiros() {
                     </button>
                 </section>
             </main>
+
+            <footer style={styles.footer}>
+                <p style={styles.footerText}>Agenda Corte © 2025 - Todos os direitos reservados.</p>
+            </footer>
         </div>
     );
 }
 
-// Estilos para o componente Barbeiros
 const styles = {
     container: {
         display: 'flex',
@@ -166,40 +164,50 @@ const styles = {
         minHeight: '100vh',
         backgroundColor: '#1a1a2e',
         color: 'white',
-        alignItems: 'center',
-        padding: '0px',
         boxSizing: 'border-box',
         width: '100%',
         overflowY: 'auto',
-        position: 'relative',
+        alignItems: 'stretch',
     },
-    backButtonContainer: {
-        position: 'absolute',
-        top: '20px',
-        left: '20px',
-        zIndex: 1000,
+    header: {
+        width: '100%',
+        padding: '20px',
+        boxSizing: 'border-box',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: '#2e2e4e',
     },
-    backButton: {
+    headerIconButton: {
         background: 'none',
         border: 'none',
         cursor: 'pointer',
-        padding: '0',
+        padding: '10px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
     },
-    backIcon: {
+    headerIconContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        color: 'white',
+        backgroundColor: 'transparent',
+        border: 'none',
+        cursor: 'pointer',
+    },
+    headerIcon: {
         width: '32px',
         height: '32px',
+        objectFit: 'contain',
         filter: 'invert(53%) sepia(91%) saturate(301%) hue-rotate(139deg) brightness(98%) contrast(101%)',
     },
-    profileContainer: {
-        position: 'absolute',
-        top: '20px',
-        right: '20px',
-        zIndex: 1000,
+    profileContainerHeader: {
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
     },
-    profileIcon: {
+    profileIconHeader: {
         width: '40px',
         height: '40px',
         cursor: 'pointer',
@@ -222,14 +230,6 @@ const styles = {
         width: '220px',
         zIndex: 1000,
     },
-    popupProfileIcon: {
-        width: '60px',
-        height: '60px',
-        borderRadius: '50%',
-        backgroundColor: 'transparent',
-        padding: '0',
-        marginBottom: '15px',
-    },
     popupUserName: {
         fontSize: '1.2em',
         fontWeight: 'bold',
@@ -247,7 +247,7 @@ const styles = {
         backgroundColor: '#4a4a6e',
         marginBottom: '15px',
     },
-    myAppointmentsButton: { // Estilo adicionado para o botão "Meus Agendamentos"
+    myAppointmentsButton: {
         backgroundColor: 'transparent',
         color: '#00bcd4',
         border: '1px solid #00bcd4',
@@ -260,7 +260,6 @@ const styles = {
         width: '100%',
         marginBottom: '10px',
     },
-    // NOVO ESTILO: Botão de Contato
     contactButton: {
         backgroundColor: 'transparent',
         color: '#00bcd4',
@@ -272,7 +271,7 @@ const styles = {
         fontWeight: 'bold',
         transition: 'background-color 0.3s ease, color 0.3s ease',
         width: '100%',
-        marginBottom: '10px', // Adicionado margem inferior para separar do botão de deslogar
+        marginBottom: '10px',
     },
     logoutButton: {
         backgroundColor: 'transparent',
@@ -287,30 +286,37 @@ const styles = {
         width: '100%',
     },
     mainContent: {
+        flexGrow: 1,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         width: '100%',
-        maxWidth: '800px',
-        paddingTop: '80px',
+        margin: '0 auto',
+        padding: '20px',
         boxSizing: 'border-box',
     },
     heroSection: {
         textAlign: 'center',
         marginBottom: '50px',
         padding: '0 20px',
+        width: '100%',
+        maxWidth: '800px',
     },
     title: {
         fontSize: '2.5em',
         marginBottom: '10px',
         color: 'white',
+        textAlign: 'center',
     },
     subtitle: {
+        // Mantido o tamanho original e garantido a centralização
         fontSize: '1em',
         color: '#aaaaaa',
         maxWidth: '600px',
         lineHeight: '1.6',
         marginBottom: '20px',
+        textAlign: 'center',
+        margin: '0 auto 20px auto', // Centraliza horizontalmente e define margem inferior
     },
     selectedServicesText: {
         fontSize: '1.1em',
@@ -328,30 +334,31 @@ const styles = {
         marginBottom: '60px',
         padding: '0 20px',
         boxSizing: 'border-box',
+        alignSelf: 'center',
     },
     barberCard: {
         backgroundColor: '#2e2e4e',
-        borderRadius: '15px', // Levemente maior para um look mais robusto
-        padding: '25px',      // Aumentado o padding
+        borderRadius: '15px',
+        padding: '25px',
         display: 'flex',
         alignItems: 'center',
         cursor: 'pointer',
-        boxShadow: '0 6px 15px rgba(0, 0, 0, 0.4)', // Sombra mais proeminente
-        transition: 'background-color 0.2s ease, border 0.2s ease, transform 0.2s ease', // Adicionado transform para efeito ao selecionar
-        border: '3px solid transparent', // Borda um pouco mais grossa
+        boxShadow: '0 6px 15px rgba(0, 0, 0, 0.4)',
+        transition: 'background-color 0.2s ease, border 0.2s ease, transform 0.2s ease',
+        border: '3px solid transparent',
     },
     barberCardSelected: {
         borderColor: '#00bcd4',
-        transform: 'scale(1.02)', // Um pequeno zoom ao ser selecionado
+        transform: 'scale(1.02)',
     },
     barberIcon: {
-        width: '70px',  // Aumentado o tamanho do ícone
-        height: '70px', // Aumentado o tamanho do ícone
+        width: '70px',
+        height: '70px',
         objectFit: 'contain',
-        marginRight: '25px', // Mais espaço à direita do ícone
+        marginRight: '25px',
     },
     barberName: {
-        fontSize: '1.8em', // Aumentado o tamanho da fonte do nome
+        fontSize: '1.8em',
         fontWeight: 'bold',
         color: 'white',
     },
@@ -376,6 +383,19 @@ const styles = {
     continueButtonDisabled: {
         backgroundColor: '#00bcd480',
         cursor: 'not-allowed',
+    },
+    footer: {
+        width: '100%',
+        backgroundColor: '#2e2e4e',
+        color: '#888',
+        textAlign: 'center',
+        padding: '20px',
+        boxSizing: 'border-box',
+        marginTop: 'auto',
+    },
+    footerText: {
+        margin: '0',
+        fontSize: '0.9em',
     },
 };
 
